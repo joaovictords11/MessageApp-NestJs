@@ -1,6 +1,5 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import helmet from "helmet";
 import { AppModule } from "./app/app.module";
 import { ParseIntIdPipe } from "./common/pipes/parse-int-id.pipe";
 
@@ -19,7 +18,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV === "production") {
     //helmet -> cabeçalhos de segurança no protocolo HTTP
-    app.use(helmet());
+    //app.use(helmet());
     //cors -> permite que outro domínio acesse a API
     app.enableCors();
   }
