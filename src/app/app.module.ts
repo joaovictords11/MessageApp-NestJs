@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import * as path from "path";
 import { AuthModule } from "src/auth/auth.module";
@@ -11,13 +13,13 @@ import { AppService } from "./app.service";
 
 @Module({
   imports: [
-    // ThrottlerModule.forRoot([
-    //   {
-    //     ttl: 10000, // Tempo de vida da janela de tempo em segundos
-    //     limit: 10, // Número máximo de requisições permitidas por janela de tempo
-    //     blockDuration: 5000, // Duração do bloqueio em milissegundos
-    //   },
-    // ]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 10000, // Tempo de vida da janela de tempo em segundos
+        limit: 10, // Número máximo de requisições permitidas por janela de tempo
+        blockDuration: 5000, // Duração do bloqueio em milissegundos
+      },
+    ]),
     ConfigModule.forRoot({
       //envFilePath: ".env",
     }),
@@ -41,10 +43,10 @@ import { AppService } from "./app.service";
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard, // Global rate limiting guard
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard, // Global rate limiting guard
+    },
   ],
 })
 export class AppModule {}
