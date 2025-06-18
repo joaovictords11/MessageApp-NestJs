@@ -28,6 +28,9 @@ import { AppService } from "./app.service";
       host: process.env.DATABASE_HOST,
       port: +process.env.DATABASE_PORT!,
       username: process.env.DATABASE_USERNAME,
+      ssl: {
+        rejectUnauthorized: false,
+      },
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
       autoLoadEntities: Boolean(process.env.DATABASE_AUTOLOADENTITIES),
