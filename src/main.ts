@@ -15,6 +15,8 @@ async function bootstrap() {
     new ParseIntIdPipe() // Custom pipe to parse int id from params
   );
 
+  app.enableShutdownHooks();
+
   if (process.env.NODE_ENV === "production") {
     //helmet -> cabeçalhos de segurança no protocolo HTTP
     app.use(helmet());
