@@ -25,10 +25,10 @@ import { AppService } from "./app.service";
     }),
     TypeOrmModule.forRoot({
       type: process.env.DATABASE_TYPE as "postgres",
-      url: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT || "5432"),
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
       autoLoadEntities: Boolean(process.env.DATABASE_AUTOLOADENTITIES),
       synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE), // Use only in development
     }),
