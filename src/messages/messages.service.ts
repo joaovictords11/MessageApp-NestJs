@@ -10,6 +10,7 @@ import { User } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 import { Repository } from "typeorm";
 import { CreateMessageDto } from "./dto/create-message.dto";
+import { ResponseMessageDto } from "./dto/response-message.dto";
 import { UpdateMessageDto } from "./dto/update-message.dto";
 import { Message } from "./entities/message.entity";
 
@@ -25,7 +26,7 @@ export class MessagesService {
     throw new NotFoundException("Message not found");
   }
 
-  async findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto): Promise<ResponseMessageDto[]> {
     const { limit = 10, page = 1 } = paginationDto;
     const offset = (page - 1) * limit; // Pular os registros já exibidos
 
@@ -42,7 +43,7 @@ export class MessagesService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<ResponseMessageDto> {
     const message = await this.messageRepository.findOne({
       where: { id },
       relations: ["from", "to"],
@@ -57,13 +58,13 @@ export class MessagesService {
       this.throwNotFoundException();
     }
 
-    return message;
+    return message!;
   }
 
   async create(
     createMessageDto: CreateMessageDto,
     tokenPayload: TokenPayloadDto
-  ) {
+  ): Promise<ResponseMessageDto> {
     const { toId, content } = createMessageDto;
 
     const from = (await this.usersService.findOne(tokenPayload.sub)) as User;
@@ -98,7 +99,7 @@ export class MessagesService {
     id: number,
     updateMessageDto: UpdateMessageDto,
     tokenPayload: TokenPayloadDto
-  ) {
+  ): Promise<ResponseMessageDto> {
     const message = await this.findOne(id);
 
     if (message?.from.id !== tokenPayload.sub) {

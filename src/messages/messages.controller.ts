@@ -11,6 +11,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import { TokenPayloadDto } from "src/auth/dto/token-payload.dto";
 import { AuthTokenGuard } from "src/auth/guards/auth-token.guard";
 import { TokenPayloadParam } from "src/auth/params/token-payload.param";
@@ -35,6 +36,7 @@ export class MessagesController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Post()
   create(
     @Body() createMessageDto: CreateMessageDto,
@@ -44,6 +46,7 @@ export class MessagesController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Patch(":id")
   update(
     @Param("id") id: number,
@@ -54,6 +57,7 @@ export class MessagesController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Delete(":id")
   remove(
     @Param("id") id: number,

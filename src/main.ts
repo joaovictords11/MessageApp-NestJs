@@ -1,5 +1,6 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import helmet from "helmet";
 import { AppModule } from "./app/app.module";
 import { ParseIntIdPipe } from "./common/pipes/parse-int-id.pipe";
@@ -23,6 +24,21 @@ async function bootstrap() {
     //cors -> permite que outro domínio acesse a API
     app.enableCors();
   }
+
+  const documentBuilderConfig = new DocumentBuilder()
+    .setTitle("Message App")
+    .setDescription("API para envio de mensagens")
+    .setVersion("1.0")
+    .addBearerAuth({
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+    })
+    .build();
+
+  const document = SwaggerModule.createDocument(app, documentBuilderConfig);
+
+  SwaggerModule.setup("api", app, document);
 
   const port = process.env.PORT || 3000;
 

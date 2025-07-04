@@ -7,11 +7,11 @@ export class PaginationDto {
   @Min(0)
   @Max(50)
   @Type(() => Number)
-  readonly limit: number;
+  readonly limit?: number;
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  readonly page: number;
+  readonly page?: number;
 }

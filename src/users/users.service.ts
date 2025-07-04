@@ -67,7 +67,7 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: [
@@ -86,7 +86,7 @@ export class UsersService {
       this.throwNotFoundException();
     }
 
-    return user;
+    return user!;
   }
 
   async update(
@@ -139,7 +139,7 @@ export class UsersService {
   async uploadPicture(
     file: Express.Multer.File,
     tokenPayload: TokenPayloadDto
-  ) {
+  ): Promise<User> {
     if (file.size < 1024) {
       throw new BadRequestException("File is too small");
     }
@@ -162,6 +162,6 @@ export class UsersService {
     user!.picture = fileName;
     await this.userRepository.save(user!);
 
-    return user;
+    return user!;
   }
 }

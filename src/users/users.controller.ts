@@ -14,6 +14,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { TokenPayloadDto } from "src/auth/dto/token-payload.dto";
 import { AuthTokenGuard } from "src/auth/guards/auth-token.guard";
 import { TokenPayloadParam } from "src/auth/params/token-payload.param";
@@ -31,18 +32,21 @@ export class UsersController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Get(":id")
   findOne(@Param("id") id: number) {
     return this.usersService.findOne(id);
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Patch(":id")
   update(
     @Param("id") id: number,
@@ -53,6 +57,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Delete(":id")
   remove(
     @Param("id") id: number,
@@ -62,6 +67,19 @@ export class UsersController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor("picture"))
   @Post("upload-picture")
   async uploadPicture(
